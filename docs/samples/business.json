@@ -1,0 +1,125 @@
+{
+  "name": "Sharma Hardware and Electricals",
+  "cash": 50000.0,
+  "analytics": {
+    "dependency_shares": {
+      "products": [
+        {
+          "product": "fans",
+          "product_id": "fans",
+          "suppliers": [
+            {
+              "name": "sup_a",
+              "share_pct": 100.0
+            }
+          ]
+        },
+        {
+          "product": "wiring",
+          "product_id": "wiring",
+          "suppliers": [
+            {
+              "name": "Unassigned",
+              "share_pct": 100.0
+            }
+          ]
+        },
+        {
+          "product": "switches",
+          "product_id": "switches",
+          "suppliers": [
+            {
+              "name": "sup_c",
+              "share_pct": 100.0
+            }
+          ]
+        }
+      ],
+      "supplier_dependency": [
+        {
+          "supplier": "Supplier A",
+          "supplier_id": "supplier_a",
+          "stock_value_share_pct": 0.0,
+          "purchase_value_share_pct": 0.0,
+          "concentration": "low"
+        },
+        {
+          "supplier": "Supplier C",
+          "supplier_id": "supplier_c",
+          "stock_value_share_pct": 0.0,
+          "purchase_value_share_pct": 0.0,
+          "concentration": "low"
+        },
+        {
+          "supplier": "New Distributor",
+          "supplier_id": "new_distributor",
+          "stock_value_share_pct": 0.0,
+          "purchase_value_share_pct": 0.0,
+          "concentration": "low"
+        }
+      ]
+    },
+    "stock_cover": [
+      {
+        "product": "fans",
+        "product_id": "fans",
+        "stock_units": 36.0,
+        "daily_demand": 4.0,
+        "cover_days": 9.0,
+        "next_restock_day": 8,
+        "days_to_stockout": 9.0,
+        "status": "watch"
+      },
+      {
+        "product": "wiring",
+        "product_id": "wiring",
+        "stock_units": 54.0,
+        "daily_demand": 6.0,
+        "cover_days": 9.0,
+        "next_restock_day": 8,
+        "days_to_stockout": 9.0,
+        "status": "watch"
+      },
+      {
+        "product": "switches",
+        "product_id": "switches",
+        "stock_units": 300.0,
+        "daily_demand": 15.0,
+        "cover_days": 20.0,
+        "next_restock_day": null,
+        "days_to_stockout": 20.0,
+        "status": "critical"
+      }
+    ],
+    "attention_inputs": [
+      {
+        "kind": "low_cover",
+        "entity": "fans",
+        "severity": "warning",
+        "day": 8,
+        "evidence": "fans cover is only 9.0 days; the next restock is day 8."
+      },
+      {
+        "kind": "low_cover",
+        "entity": "wiring",
+        "severity": "warning",
+        "day": 8,
+        "evidence": "wiring cover is only 9.0 days; the next restock is day 8."
+      },
+      {
+        "kind": "low_cover",
+        "entity": "switches",
+        "severity": "critical",
+        "day": null,
+        "evidence": "switches cover is 20.0 days against a 15.0/day run-rate."
+      },
+      {
+        "kind": "payable_thin_cash",
+        "entity": "Supplier C invoice",
+        "severity": "critical",
+        "day": 25,
+        "evidence": "The ₹70,000 Supplier C invoice is due on day 25 while opening cash is ₹50,000."
+      }
+    ]
+  }
+}
