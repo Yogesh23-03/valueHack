@@ -8,6 +8,7 @@ export default function TopNav() {
   const links = [
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/fire-drill', label: 'Fire Drill' },
+    { href: '/pricing', label: 'Price What-If' },
     { href: '/vendor-check', label: 'Vendor Check' },
     { href: '/bill-scan', label: 'Bill Scan' },
     { href: '/report', label: 'Report' },
@@ -21,18 +22,18 @@ export default function TopNav() {
           <ShieldAlert className="w-8 h-8 text-primary" />
           <span className="font-bold text-xl tracking-tight">BizSim</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="flex items-center gap-6 overflow-x-auto md:overflow-visible" aria-label="Main navigation">
           {links.map(link => (
             <Link 
               key={link.href} 
               href={link.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`relative whitespace-nowrap text-sm font-medium transition-colors ${
                 pathname === link.href ? 'text-primary' : 'text-zinc-400 hover:text-zinc-100'
               }`}
             >
               {link.label}
               {pathname === link.href && (
-                <div className="h-0.5 w-full bg-primary mt-1 absolute rounded-full" />
+                <div className="absolute left-0 h-0.5 w-full rounded-full bg-primary" />
               )}
             </Link>
           ))}

@@ -18,12 +18,16 @@ export default function About() {
         <h3 className="text-xl font-bold text-white mt-8 mb-4">Engine modules</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { name: 'cascade.py', desc: 'Day-by-day deterministic simulation' },
-            { name: 'actions.py', desc: '5 pre-defined response strategies' },
-            { name: 'forecast.py', desc: 'Seasonal average demand forecast' },
-            { name: 'anomaly.py', desc: 'Z-score anomaly detection on sales & cost' },
-            { name: 'vendor.py', desc: 'Rule-based trust scoring (mock data)' },
-            { name: 'bills.py', desc: 'AI bill extraction via Gemini Vision' },
+            { name: 'engine/cascade.py', desc: 'Day-by-day deterministic simulation with structured events' },
+            { name: 'engine/actions.py', desc: '6 response strategies with affordability, risk rubric and suggestion' },
+            { name: 'engine/pricing.py', desc: 'Price what-if with elasticity bands and break-even' },
+            { name: 'engine/analytics.py', desc: 'Supplier dependency shares and stock cover' },
+            { name: 'engine/ranges.py', desc: 'Demand low/base/high runs' },
+            { name: 'engine/models.py', desc: 'Data-driven Business, Product and Shock models' },
+            { name: 'engine/adapters.py', desc: 'Builds the Business model from dict or database' },
+            { name: 'explain/reasons.py', desc: 'Explanations, cascade chain and assumptions' },
+            { name: 'signals/vendor.py', desc: 'Rule-based trust scoring (mock data)' },
+            { name: 'signals/llm.py', desc: 'Regex scenario parser — no LLM call exists' },
           ].map(m => (
             <div key={m.name} className="p-3 rounded-xl bg-white/5 border border-white/5">
               <code className="text-primary text-sm font-mono">{m.name}</code>

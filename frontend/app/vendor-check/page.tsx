@@ -1,7 +1,9 @@
 "use client";
 import { useState } from 'react';
+import Link from 'next/link';
 import { checkVendor } from '@/lib/api';
 import { Search, CheckCircle, AlertTriangle } from 'lucide-react';
+import { ErrorState } from '@/components/ui/states';
 
 interface VendorResult {
   score: number;
@@ -13,14 +15,16 @@ export default function VendorCheck() {
   const [query, setQuery] = useState('New Distributor');
   const [result, setResult] = useState<VendorResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
   const handleCheck = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await checkVendor({ name: query });
       setResult(res);
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
     setLoading(false);
   };
@@ -57,6 +61,8 @@ export default function VendorCheck() {
         ))}
       </div>
 
+      {error ? <ErrorState error={error} title="The vendor check could not run" onRetry={handleCheck} /> : null}
+
       {result && (
         <div className="glass p-8 rounded-3xl flex flex-col md:flex-row gap-8 items-center border border-white/10">
           <div className="flex-shrink-0 relative flex items-center justify-center w-40 h-40">
@@ -92,9 +98,12 @@ export default function VendorCheck() {
                 </div>
               ))}
             </div>
-            <button className="mt-4 w-full py-2.5 rounded-xl border border-primary/50 text-primary text-sm font-medium hover:bg-primary/10 transition">
+            <Link
+              href={`/fire-drill?target=${encodeURIComponent(query)}`}
+              className="mt-4 block w-full rounded-xl border border-primary/50 py-2.5 text-center text-sm font-medium text-primary transition hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+            >
               Use this vendor in a Fire Drill
-            </button>
+            </Link>
           </div>
         </div>
       )}
