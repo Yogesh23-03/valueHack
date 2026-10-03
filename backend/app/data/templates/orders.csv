@@ -1,0 +1,2 @@
+id,order_id,customer_name,items,amount,target_delivery_day,payment_terms_days
+1,ORD-001,Verma Contractors,"fans:20,wiring:30",74000,12,7

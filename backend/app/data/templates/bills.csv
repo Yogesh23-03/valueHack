@@ -1,0 +1,3 @@
+id,bill_number,supplier_name,amount,date,due_date,status
+1,INV-2026-001,Supplier A,275000,2026-01-10,2026-01-25,pending
+2,INV-2026-002,Supplier C,70000,2026-01-12,2026-01-27,pending

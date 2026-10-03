@@ -1,3 +1,6 @@
+import os
+from typing import Optional
+
 from fastapi import Depends, FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -8,20 +11,40 @@ from .db import create_db_and_tables, get_session
 from .engine.actions import compare_actions
 from .engine.adapters import business_from_db, business_from_dict
 from .engine.analytics import attention_inputs, dependency_shares, stock_cover
+from .engine.anomaly import run_full_anomaly_detection
 from .engine.cascade import build_plan, resolve_target, simulate
+from .engine.csv_loader import (
+    CSV_INVALID_FORMAT,
+    load_validated_rows_into_db,
+    parse_and_validate_csv,
+)
 from .engine.errors import INVALID_SHOCK, EngineError
+from .engine.forecast import generate_business_forecast
 from .engine.models import Shock
+from .explain.report import generate_report
 from .routers.engine import router as engine_router
 from .seed import demo_business_dict, seed_demo_data
 from .signals.llm import parse_scenario
 from .signals.vendor import check_vendor
-from .explain.report import generate_report
 
-app = FastAPI()
+app = FastAPI(title="BizSim Backend API", version="1.0.0")
+
+# CORS configuration supporting configurable frontend origin
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
+allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+if frontend_url and frontend_url not in allowed_origins:
+    allowed_origins.append(frontend_url)
+if not frontend_url:
+    allowed_origins.append("*")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins if "*" not in allowed_origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,7 +55,7 @@ app.include_router(engine_router)
 
 @app.exception_handler(EngineError)
 async def engine_error_handler(request, exc: EngineError):
-    """Serialize every engine error in the shared ``{code, message}`` format."""
+    """Serialize every engine and CSV validation error in the shared {code, message} format."""
     return JSONResponse(status_code=exc.status, content=exc.to_dict())
 
 
@@ -48,7 +71,7 @@ def _demo_business():
 
 @app.get("/health")
 def health():
-    return {"ok": True, "version": "1.0"}
+    return {"status": "ok", "ok": True, "version": "1.0", "service": "bizsim-backend"}
 
 
 @app.get("/api/business")
@@ -65,6 +88,37 @@ def get_business(session: Session = Depends(get_session)):
             "stock_cover": stock_cover(business),
             "attention_inputs": attention_inputs(business),
         },
+    }
+
+
+@app.post("/api/business/load")
+async def api_business_load(
+    file: UploadFile = File(...),
+    table_type: Optional[str] = None,
+    session: Session = Depends(get_session),
+):
+    """Accept and validate CSV business data and load it into SQLite database."""
+    try:
+        content_bytes = await file.read()
+        try:
+            content_str = content_bytes.decode("utf-8")
+        except UnicodeDecodeError:
+            content_str = content_bytes.decode("latin-1")
+    except Exception as exc:
+        raise EngineError(CSV_INVALID_FORMAT, f"Failed to read CSV payload: {exc}")
+
+    table, rows = parse_and_validate_csv(
+        content=content_str,
+        table_type=table_type,
+        session=session,
+    )
+    loaded_count = load_validated_rows_into_db(table_type=table, rows=rows, session=session)
+
+    return {
+        "status": "success",
+        "table": table,
+        "rows_loaded": loaded_count,
+        "message": f"Successfully loaded and validated {loaded_count} {table} records.",
     }
 
 
@@ -162,27 +216,94 @@ def api_bill_scan(file: UploadFile = File(...)):
 
 
 @app.get("/api/attention")
-def api_attention():
-    return [
-        {"id": 1, "text": "Supplier A delay risk", "icon": "alert-circle"},
-        {"id": 2, "text": "Cash flow dip expected day 23", "icon": "trending-down"},
-        {"id": 3, "text": "Supplier C payment due soon", "icon": "clock"},
-        {"id": 4, "text": "Verma Contractors order pending", "icon": "box"},
-        {"id": 5, "text": "High concentration on Supplier A", "icon": "pie-chart"},
-    ]
+def api_attention(session: Session = Depends(get_session)):
+    """Aggregate attention items: dynamically detected anomalies and engine stock/supplier alerts."""
+    try:
+        business = business_from_db(session)
+    except Exception:
+        business = _demo_business()
+
+    engine_items = attention_inputs(business)
+    anomaly_data = run_full_anomaly_detection()
+    anomaly_items = anomaly_data.get("anomalies", [])
+
+    unified_items = []
+    item_id = 1
+
+    # Add anomaly items first (high priority warnings)
+    for a in anomaly_items:
+        icon = "alert-circle"
+        if a["metric"] == "cost":
+            icon = "trending-up"
+        elif a["metric"] == "sales":
+            icon = "trending-down"
+        elif a["metric"] == "bill":
+            icon = "file-text"
+
+        unified_items.append(
+            {
+                "id": item_id,
+                "text": a["reason"],
+                "title": a.get("reason", "").split(":")[0],
+                "icon": icon,
+                "type": "anomaly",
+                "kind": f"anomaly_{a['metric']}",
+                "metric": a["metric"],
+                "severity": a["severity"],
+                "date": a.get("date"),
+                "value": a.get("value"),
+                "expected_value": a.get("expected_value"),
+                "evidence": a["reason"],
+            }
+        )
+        item_id += 1
+
+    # Add engine operational alerts
+    for e in engine_items:
+        icon = "alert-circle"
+        if e["kind"] == "low_cover":
+            icon = "box"
+        elif e["kind"] == "supplier_concentration":
+            icon = "pie-chart"
+        elif e["kind"] == "payable_thin_cash":
+            icon = "clock"
+
+        unified_items.append(
+            {
+                "id": item_id,
+                "text": e["evidence"],
+                "title": f"{e['entity']} {e['kind'].replace('_', ' ').title()}",
+                "icon": icon,
+                "type": "business",
+                "kind": e["kind"],
+                "entity": e["entity"],
+                "severity": e["severity"],
+                "day": e.get("day"),
+                "evidence": e["evidence"],
+            }
+        )
+        item_id += 1
+
+    return unified_items
 
 
 @app.get("/api/forecast")
-def api_forecast():
-    return {"forecast": [], "mape": 0.05}
+def api_forecast(days: int = 30, holdout: int = 14):
+    """30-day product demand forecast with Holt-Winters / seasonal fallback and 14-day holdout MAPE."""
+    return generate_business_forecast(forecast_days=days, holdout_days=holdout)
 
 
 @app.get("/api/anomalies")
 def api_anomalies():
-    return []
+    """Detect anomalies across sales, costs, bills, and stock."""
+    return run_full_anomaly_detection()
 
 
 @app.get("/api/report")
 def api_report():
     buf = generate_report()
-    return StreamingResponse(buf, media_type="application/pdf", headers={"Content-Disposition": "attachment; filename=report.pdf"})
+    return StreamingResponse(
+        buf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=report.pdf"},
+    )
