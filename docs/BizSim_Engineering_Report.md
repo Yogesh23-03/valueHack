@@ -446,10 +446,11 @@ averages with a ±band shown instead.
   those must be run separately (they are clean today).
 * **No automated UI tests**, and `requirements.txt` is unpinned (installed
   versions are recorded in the README instead).
-* **Repo hygiene**: `backend/bizsim.db` and `__pycache__` files are tracked and
-  the repo had no `.gitignore`. One was added for future artifacts; the already
-  tracked files were deliberately left in place so teammates' branches are
-  unaffected.
+* **Repo hygiene**: `backend/bizsim.db` and `__pycache__` files are tracked. There
+  was a `frontend/.gitignore` (Next.js default: `.next/`, `node_modules/`,
+  `next-env.d.ts`) but **no root `.gitignore`**, so backend artifacts and run logs
+  were uncovered. A root `.gitignore` was added for those; the already tracked
+  files were deliberately left in place so teammates' branches are unaffected.
 * The frontend labels every figure as an estimate and marks the demo data as
   synthetic; it does not attempt a confidence interval beyond the demand band.
 

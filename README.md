@@ -442,9 +442,11 @@ the demo business is seeded automatically on startup (`seed_demo_data()`).
 is unavailable, so the demo always works.
 
 > Repo hygiene note: this repository currently **tracks** `backend/bizsim.db`
-> and the generated `__pycache__` files, and had no `.gitignore`. A root
-> `.gitignore` has now been added for new junk (logs, caches, `.env.local`,
-> `node_modules`, `.next`, `bizsim.db`). The already-tracked generated files were
+> and the generated `__pycache__` files. There was a `frontend/.gitignore` (the
+> Next.js default, covering `.next/`, `node_modules/` and `next-env.d.ts`) but no
+> root one, so nothing covered backend artifacts or run logs. A root `.gitignore`
+> has now been added for those (logs, `__pycache__`, `.pytest_cache`, `.venv`,
+> `bizsim.db`, `.env.local`). The already-tracked generated files were
 > deliberately **not** removed from the index, so teammates' work is unaffected.
 
 ### Frontend
