@@ -1,154 +1,254 @@
 "use client";
-import { useState, useCallback } from 'react';
-import { simulateCascade, compareActions } from '@/lib/api';
-import { LineChart, Line, ReferenceLine, ResponsiveContainer, YAxis, XAxis, Tooltip } from 'recharts';
-import { Play } from 'lucide-react';
 
-interface SimResult {
-  stockout: number | null;
-  first_negative_day: number | null;
-  min_cash: number;
-  failed: Array<{ name: string; day: number }>;
-  cash_timeline: number[];
+import { useCallback, useEffect, useRef, useState } from "react";
+import { simulateCascade, compareActions } from "@/lib/api";
+import type { ActionsCompareResponse, CascadeResult, ScenarioType } from "@/lib/types";
+import { formatCount, formatDay, formatInr } from "@/lib/format";
+import { EstimateBadge } from "@/components/ui/badges";
+import { ErrorState, LoadingSkeleton } from "@/components/ui/states";
+import ScenarioControls from "@/components/fire-drill/ScenarioControls";
+import CascadeMap from "@/components/fire-drill/CascadeMap";
+import TimelinesChart from "@/components/fire-drill/TimelinesChart";
+import WhyPanel from "@/components/fire-drill/WhyPanel";
+import AssumptionsBox from "@/components/fire-drill/AssumptionsBox";
+import RangesPanel from "@/components/fire-drill/RangesPanel";
+import ActionsCompare from "@/components/fire-drill/ActionsCompare";
+
+function buildRequest(type: ScenarioType, target: string, magnitude: number, demandBand: number) {
+  const scenario = {
+    type,
+    target: type === "cost_spike" ? "" : target,
+    magnitude,
+  };
+  if (type === "supplier_delay") {
+    return { delay: magnitude, demand_band_pct: demandBand, scenario };
+  }
+  if (type === "customer_delay") {
+    return { delay: 0, customer_late_days: magnitude, demand_band_pct: demandBand, scenario };
+  }
+  return { delay: 0, cost_spike_pct: magnitude, demand_band_pct: demandBand, scenario };
 }
 
-interface ActionResult {
-  min_cash: number;
-  failed: Array<{ name: string; day: number }>;
-  cash_timeline: number[];
-}
-
-interface ActionsResult {
-  do_nothing: ActionResult;
-  ask_extension: ActionResult;
-  early_discount: ActionResult;
-  switch_vendor: ActionResult;
-  combined: ActionResult;
+function isAbort(e: unknown) {
+  return e instanceof DOMException && e.name === "AbortError";
 }
 
 export default function FireDrill() {
-  const [delay, setDelay] = useState(14);
-  const [simResult, setSimResult] = useState<SimResult | null>(null);
-  const [actionsResult, setActionsResult] = useState<ActionsResult | null>(null);
+  const [type, setType] = useState<ScenarioType>("supplier_delay");
+  const [target, setTarget] = useState("A");
+  const [magnitude, setMagnitude] = useState(14);
+  const [demandBand, setDemandBand] = useState(20);
 
-  const runSim = useCallback(async (d: number) => {
-    try {
-      const res = await simulateCascade({ delay: d });
-      setSimResult(res);
-      const acts = await compareActions(d);
-      setActionsResult(acts);
-    } catch (e) {
-      console.error(e);
-    }
+  const [result, setResult] = useState<CascadeResult | null>(null);
+  const [simLoading, setSimLoading] = useState(true);
+  const [simError, setSimError] = useState<unknown>(null);
+
+  const [actions, setActions] = useState<ActionsCompareResponse | null>(null);
+  const [actionsLoading, setActionsLoading] = useState(true);
+  const [actionsError, setActionsError] = useState<unknown>(null);
+
+  const [selectedStep, setSelectedStep] = useState<string | null>(null);
+  const [selectedEventIds, setSelectedEventIds] = useState<string[]>([]);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Prefill target from /fire-drill?target=... (vendor check deep link).
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("target");
+    if (t) setTarget(t);
   }, []);
 
-  const handleDelayChange = (val: number) => {
-    setDelay(val);
-  };
+  const run = useCallback(
+    async (t: ScenarioType, tg: string, mag: number, band: number) => {
+      abortRef.current?.abort();
+      const ctrl = new AbortController();
+      abortRef.current = ctrl;
+      setSimLoading(true);
+      setSimError(null);
+      try {
+        const res = await simulateCascade(buildRequest(t, tg, mag, band), ctrl.signal);
+        setResult(res);
+        setSimLoading(false);
+      } catch (e) {
+        if (!isAbort(e)) {
+          setSimError(e);
+          setSimLoading(false);
+        }
+        return;
+      }
+      // The compare endpoint models the Supplier-A delay case only.
+      if (t === "supplier_delay") {
+        setActionsLoading(true);
+        setActionsError(null);
+        try {
+          const acts = await compareActions(mag, ctrl.signal);
+          setActions(acts);
+        } catch (e) {
+          if (!isAbort(e)) setActionsError(e);
+        } finally {
+          if (!ctrl.signal.aborted) setActionsLoading(false);
+        }
+      } else {
+        setActions(null);
+        setActionsLoading(false);
+        setActionsError(null);
+      }
+    },
+    [],
+  );
 
-  const chartData = simResult?.cash_timeline.map((c: number, i: number) => ({
-    day: i + 1,
-    cash: c,
-    actionCash: actionsResult?.combined?.cash_timeline[i] ?? c,
-    baseline: 50000 - (i * 3000),
-  })) || [];
+  // Auto-run on any control change, debounced so sliders feel live.
+  useEffect(() => {
+    const h = setTimeout(() => run(type, target, magnitude, demandBand), 300);
+    return () => clearTimeout(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, target, magnitude, demandBand]);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  const selectedStepDay = result?.cascade_chain?.find((s) => s.step === selectedStep)?.day ?? null;
+  const highlightEventDays = (result?.events ?? [])
+    .filter((ev) => selectedEventIds.includes(ev.id))
+    .map((ev) => ev.day)
+    .filter((d, i, a) => a.indexOf(d) === i);
+
+  const suggested = actions ? Object.values(actions).find((a) => a.suggested) : undefined;
+  const baselineTimeline = actions?.do_nothing?.cash_timeline ?? null;
+  const scenarioNote =
+    type === "supplier_delay"
+      ? `Compared for a ${magnitude}-day Supplier A delay${target && target !== "A" ? ` (${target})` : ""}.`
+      : "Action comparison currently models a Supplier-A delay (the endpoint takes a delay only) — set the type to Supplier delay to compare actions.";
+
+  const s = result?.summary;
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 min-h-[calc(100vh-8rem)]">
-      {/* Left: Params */}
-      <div className="w-full md:w-80 glass p-6 rounded-2xl flex flex-col gap-6 overflow-y-auto">
-        <h2 className="text-xl font-bold">Scenario Setup</h2>
-        <div>
-          <label className="text-sm text-zinc-400 mb-2 block">Supplier Delay (Days)</label>
-          <input
-            type="range" min="0" max="30" value={delay}
-            onChange={e => handleDelayChange(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
-          <div className="text-right font-mono mt-1">{delay} days</div>
-        </div>
-        <button onClick={() => runSim(delay)} className="w-full py-3 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition">
-          <Play className="w-4 h-4" /> Run Simulation
-        </button>
-        {!simResult && (
-          <p className="text-xs text-zinc-500 text-center">Click Run Simulation to begin</p>
-        )}
-      </div>
+    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+      {/* Left: scenario controls */}
+      <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
+        <ScenarioControls
+          type={type}
+          target={target}
+          magnitude={magnitude}
+          demandBand={demandBand}
+          onChange={(patch) => {
+            if (patch.type !== undefined) setType(patch.type);
+            if (patch.target !== undefined) setTarget(patch.target);
+            if (patch.magnitude !== undefined) setMagnitude(patch.magnitude);
+            if (patch.demandBand !== undefined) setDemandBand(patch.demandBand);
+            setSelectedStep(null);
+            setSelectedEventIds([]);
+          }}
+          onApplyParsed={(t, tg, mag) => {
+            setType(t);
+            setTarget(tg);
+            setMagnitude(mag);
+          }}
+        />
+      </aside>
 
-      {/* Center & Right */}
-      <div className="flex-1 flex flex-col gap-6 overflow-hidden">
-        {/* Cascade Map */}
-        <div className="flex-1 glass rounded-2xl p-6 relative flex flex-col items-center justify-center border border-white/5 min-h-48">
-          <h3 className="absolute top-6 left-6 font-semibold text-sm text-zinc-400 uppercase tracking-wider">Cascade Flow</h3>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium mt-8">
+      {/* Right: results */}
+      <div className="flex min-w-0 flex-col gap-6">
+        {/* Headline summary */}
+        {simLoading && !result && <LoadingSkeleton rows={2} className="h-24" />}
+        {simError ? (
+          <ErrorState
+            error={simError}
+            title="The simulation could not run"
+            onRetry={() => run(type, target, magnitude, demandBand)}
+          />
+        ) : null}
+        {result && s && (
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
             {[
-              { label: 'Supplier A', state: 'danger', detail: delay > 0 ? `+${delay}d late` : 'On time' },
-              { label: 'Stock', state: simResult?.stockout ? 'danger' : 'safe', detail: simResult?.stockout ? `Out day ${simResult.stockout}` : '—' },
-              { label: 'Orders', state: simResult?.stockout ? 'warning' : 'safe', detail: simResult?.stockout ? 'Delayed' : '—' },
-              { label: 'Cash', state: simResult?.first_negative_day ? 'danger' : 'safe', detail: simResult?.first_negative_day ? `Neg day ${simResult.first_negative_day}` : '—' },
-              { label: 'Payables', state: simResult?.failed?.length ? 'danger' : 'safe', detail: simResult?.failed?.length ? `${simResult.failed.length} failed` : '—' },
-            ].map((node, i, arr) => (
-              <div key={node.label} className="flex items-center gap-2">
-                <div className={`p-4 rounded-xl border text-center min-w-[100px] ${
-                  node.state === 'danger' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
-                  node.state === 'warning' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
-                  'bg-white/5 text-zinc-300 border-white/10'
-                }`}>
-                  <div className="font-semibold">{node.label}</div>
-                  <div className="text-xs mt-1 opacity-80">{node.detail}</div>
-                </div>
-                {i < arr.length - 1 && (
-                  <div className={`w-6 h-0.5 ${node.state !== 'safe' ? 'bg-red-500/50' : 'bg-white/20'}`} />
-                )}
+              { label: "Stock-out", value: formatDay(s.stockout_day) },
+              { label: "Lost walk-in sales", value: formatInr(s.lost_sales_inr) },
+              { label: "Cash below zero", value: formatDay(s.first_negative_day) },
+              { label: "Lowest cash", value: formatInr(s.lowest_cash_inr) },
+              { label: "Failed payments", value: formatCount(s.failed_payments_count) },
+            ].map((m) => (
+              <div key={m.label} className="glass rounded-2xl p-4">
+                <p className="text-[10px] uppercase tracking-wide text-zinc-500">{m.label}</p>
+                <p className="mt-1 font-mono text-lg font-bold text-zinc-100">{m.value}</p>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Cash Chart */}
-        <div className="glass p-6 rounded-2xl">
-          <h3 className="font-semibold mb-4 text-sm text-zinc-400 uppercase tracking-wider">Cash Runway</h3>
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
-                <XAxis dataKey="day" stroke="#A1A1AA" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="#A1A1AA" fontSize={11} tickLine={false} axisLine={false} tickFormatter={v => `₹${Math.round(v / 1000)}k`} />
-                <Tooltip contentStyle={{ backgroundColor: '#12121A', borderColor: 'rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }} />
-                <ReferenceLine y={0} stroke="#EF4444" strokeDasharray="4 4" label={{ position: 'right', value: '₹0', fill: '#EF4444', fontSize: 11 }} />
-                {simResult?.first_negative_day && (
-                  <ReferenceLine x={simResult.first_negative_day} stroke="#EF4444" strokeDasharray="4 4"
-                    label={{ position: 'top', value: `Day ${simResult.first_negative_day}`, fill: '#EF4444', fontSize: 11 }} />
-                )}
-                <Line type="monotone" dataKey="baseline" stroke="#71717A" strokeWidth={1.5} dot={false} name="Baseline" strokeDasharray="4 4" />
-                <Line type="monotone" dataKey="cash" stroke="#EF4444" strokeWidth={2} dot={false} name="Disrupted" />
-                <Line type="monotone" dataKey="actionCash" stroke="#22C55E" strokeWidth={2} dot={false} name="After Action" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          {simResult && (
-            <div className="mt-4 flex gap-4 text-xs">
-              <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-zinc-500 rounded" /> Baseline</div>
-              <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-red-500 rounded" /> Disrupted</div>
-              <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-green-500 rounded" /> After Action</div>
+            <div className="col-span-2 flex items-center gap-2 md:col-span-5">
+              <EstimateBadge />
+              <span className="text-xs text-zinc-500">
+                All figures are estimates from the simulation on synthetic demo data — the tool suggests; the owner decides.
+              </span>
             </div>
+          </div>
+        )}
+
+        {/* Cascade map */}
+        <div className="glass rounded-2xl p-4">
+          <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+            How the problem cascades
+          </h3>
+          {simLoading && !result ? (
+            <LoadingSkeleton rows={2} className="h-40" />
+          ) : result?.cascade_chain?.length ? (
+            <CascadeMap chain={result.cascade_chain} selectedStep={selectedStep} onSelectStep={setSelectedStep} />
+          ) : result ? (
+            <p className="py-6 text-center text-sm text-zinc-500">No cascade chain returned for this scenario.</p>
+          ) : null}
+          {selectedStepDay !== null && (
+            <p className="mt-2 text-xs text-primary">
+              Selected step is marked on the cash chart at day {selectedStepDay}.
+            </p>
           )}
         </div>
 
-        {/* Actions Grid */}
-        {actionsResult && (
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-            {(Object.entries(actionsResult) as [string, ActionResult][]).map(([key, res]) => (
-              <div key={key} className={`p-4 rounded-xl border ${key === 'combined' ? 'border-primary/50 bg-primary/10' : 'border-white/5 bg-white/5'}`}>
-                <div className="flex justify-between items-start mb-2 gap-1">
-                  <h4 className="font-semibold capitalize text-xs leading-tight">{key.replace(/_/g, ' ')}</h4>
-                  {key === 'combined' && <span className="text-[9px] uppercase font-bold text-primary bg-primary/20 px-1.5 py-0.5 rounded-full whitespace-nowrap">✓ Best</span>}
-                </div>
-                <p className="text-xs text-zinc-400">Min: ₹{Math.round(res.min_cash).toLocaleString()}</p>
-                <p className="text-xs text-zinc-400">Fails: {res.failed.length}</p>
-              </div>
-            ))}
+        {/* Timelines */}
+        {result && (
+          <div className="glass rounded-2xl p-6">
+            <TimelinesChart
+              result={result}
+              baseline={baselineTimeline}
+              actionTimeline={suggested?.cash_timeline ?? null}
+              actionLabel={suggested ? `${suggested.label} (suggested)` : undefined}
+              selectedDay={selectedStepDay}
+              highlightEventDays={highlightEventDays}
+            />
           </div>
         )}
+
+        {/* Ranges */}
+        {result?.ranges && (
+          <div className="glass rounded-2xl p-6">
+            <RangesPanel ranges={result.ranges} />
+          </div>
+        )}
+
+        {/* Why + events + assumptions */}
+        {result?.explanations && (
+          <div className="glass rounded-2xl p-6">
+            <WhyPanel
+              explanations={result.explanations}
+              events={result.events ?? []}
+              selectedEventIds={selectedEventIds}
+              onSelectEvents={setSelectedEventIds}
+            />
+          </div>
+        )}
+        {result?.assumptions && (
+          <div className="glass rounded-2xl p-6">
+            <AssumptionsBox assumptions={result.assumptions} />
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="glass rounded-2xl p-6">
+          {actionsLoading && !actions ? (
+            <LoadingSkeleton rows={4} className="h-28" />
+          ) : (
+            <ActionsCompare
+              actions={actions}
+              error={actionsError}
+              onRetry={() => run(type, target, magnitude, demandBand)}
+              scenarioNote={type === "supplier_delay" ? null : scenarioNote}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
