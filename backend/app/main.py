@@ -203,16 +203,40 @@ class VendorParams(BaseModel):
 
 @app.post("/api/vendor/check")
 def api_vendor_check(params: VendorParams):
-    return check_vendor(params.name or params.gstin)
+    return check_vendor(query=params.name or params.gstin or params.pan, gstin=params.gstin or None, pan=params.pan or None)
+
+
+from .signals.bills import parse_bill_file
 
 
 @app.post("/api/bill/scan")
-def api_bill_scan(file: UploadFile = File(...)):
-    return {
-        "supplier": "Sample Supplier",
-        "items": [{"name": "Sample Item", "qty": 1, "unit_price": 100, "tax_rate": 18}],
-        "due_date": "2024-12-31",
-    }
+async def api_bill_scan(file: UploadFile = File(...)):
+    try:
+        content_bytes = await file.read()
+        return parse_bill_file(content_bytes, filename=file.filename or "invoice.pdf")
+    except Exception as exc:
+        raise EngineError(CSV_INVALID_FORMAT, f"Failed to parse bill: {exc}")
+
+
+class BillConfirmParams(BaseModel):
+    supplier: str
+    amount: float
+    due_day: int = 25
+    invoice_number: str = ""
+
+
+@app.post("/api/bill/confirm")
+def api_bill_confirm(params: BillConfirmParams, session: Session = Depends(get_session)):
+    payable = Payable(
+        name=f"Invoice {params.invoice_number or params.supplier}",
+        amount=params.amount,
+        due_day=params.due_day,
+        supplier_name=params.supplier,
+        business_id=1,
+    )
+    session.add(payable)
+    session.commit()
+    return {"status": "success", "message": f"Payable of ₹{params.amount:,.0f} scheduled for Day {params.due_day}."}
 
 
 @app.get("/api/attention")
