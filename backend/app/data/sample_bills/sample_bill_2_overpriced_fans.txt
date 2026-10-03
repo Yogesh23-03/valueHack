@@ -1,0 +1,20 @@
+"""TAX INVOICE - APEX ELECTRICALS PVT LTD
+Plot 42, MIDC Industrial Area, Pune 411018, Maharashtra
+GSTIN: 27AAPFU0939F1ZV
+
+Invoice No: INV-2026-981-OVERCHARGE
+Date: 01-Oct-2026
+Due Date: 23-Oct-2026
+
+Billed To:
+Sharma Hardware and Electricals
+
+Items:
+1. High-Speed Ceiling Fans 1200mm | HSN: 8414 | Qty: 50 | Rate: Rs 1,680.00 | GST: 18% | Amount: Rs 84,000.00
+   [NOTICE: Unit rate of Rs 1,680 is 20% above regular historical benchmark of Rs 1,400]
+2. Copper Wiring Coils 90m        | HSN: 8544 | Qty: 80 | Rate: Rs 900.00   | GST: 18% | Amount: Rs 72,000.00
+
+Subtotal: Rs 1,56,000.00
+GST (18%): Rs 28,080.00
+Total Amount Payable: Rs 1,84,080.00
+"""

@@ -1,0 +1,19 @@
+"""TAX INVOICE - CLASSIC SWITCHGEARS & FITTINGS
+12/A, Peenya Industrial Estate, Bengaluru 560058, Karnataka
+GSTIN: 29AABCS1429B1Z1
+
+Invoice No: INV-2026-412-TAX-MISMATCH
+Date: 02-Oct-2026
+Due Date: 25-Oct-2026
+
+Billed To:
+Sharma Hardware and Electricals
+
+Items:
+1. Modular 6A Switches Box        | HSN: 8536 | Qty: 200 | Rate: Rs 120.00 | GST: 28% (MISMATCH: Standard is 18%) | Amount: Rs 24,000.00
+2. PVC Concealed Boxes & Fittings | HSN: 7318 | Qty: 100 | Rate: Rs 80.00  | GST: 18%                              | Amount: Rs 8,000.00
+
+Subtotal: Rs 32,000.00
+Billed GST: Rs 8,160.00
+Total: Rs 40,160.00
+"""
