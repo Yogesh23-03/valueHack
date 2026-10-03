@@ -1,0 +1,827 @@
+{
+  "stockout": 30,
+  "lost_rev": 14800.0,
+  "first_negative_day": null,
+  "min_cash": 62550.0,
+  "min_day": 1,
+  "failed": [],
+  "delivered": true,
+  "end_cash": 115200.0,
+  "cash_timeline": [
+    62550.0,
+    75100.0,
+    87650.0,
+    100200.0,
+    112750.0,
+    125300.0,
+    137850.0,
+    150400.0,
+    162950.0,
+    175500.0,
+    188050.0,
+    200600.0,
+    213150.0,
+    225700.0,
+    238250.0,
+    250800.0,
+    263350.0,
+    275900.0,
+    362450.0,
+    375000.0,
+    385000.0,
+    395000.0,
+    130000.0,
+    140000.0,
+    80000.0,
+    90000.0,
+    100000.0,
+    110000.0,
+    120000.0,
+    115200.0
+  ],
+  "stock_timeline": [
+    {
+      "fans": 32.0,
+      "wiring": 48.0,
+      "switches": 285.0
+    },
+    {
+      "fans": 28.0,
+      "wiring": 42.0,
+      "switches": 270.0
+    },
+    {
+      "fans": 24.0,
+      "wiring": 36.0,
+      "switches": 255.0
+    },
+    {
+      "fans": 20.0,
+      "wiring": 30.0,
+      "switches": 240.0
+    },
+    {
+      "fans": 16.0,
+      "wiring": 24.0,
+      "switches": 225.0
+    },
+    {
+      "fans": 12.0,
+      "wiring": 18.0,
+      "switches": 210.0
+    },
+    {
+      "fans": 8.0,
+      "wiring": 12.0,
+      "switches": 195.0
+    },
+    {
+      "fans": 104.0,
+      "wiring": 156.0,
+      "switches": 180.0
+    },
+    {
+      "fans": 100.0,
+      "wiring": 150.0,
+      "switches": 165.0
+    },
+    {
+      "fans": 96.0,
+      "wiring": 144.0,
+      "switches": 150.0
+    },
+    {
+      "fans": 92.0,
+      "wiring": 138.0,
+      "switches": 135.0
+    },
+    {
+      "fans": 68.0,
+      "wiring": 102.0,
+      "switches": 120.0
+    },
+    {
+      "fans": 64.0,
+      "wiring": 96.0,
+      "switches": 105.0
+    },
+    {
+      "fans": 60.0,
+      "wiring": 90.0,
+      "switches": 90.0
+    },
+    {
+      "fans": 56.0,
+      "wiring": 84.0,
+      "switches": 75.0
+    },
+    {
+      "fans": 52.0,
+      "wiring": 78.0,
+      "switches": 60.0
+    },
+    {
+      "fans": 48.0,
+      "wiring": 72.0,
+      "switches": 45.0
+    },
+    {
+      "fans": 44.0,
+      "wiring": 66.0,
+      "switches": 30.0
+    },
+    {
+      "fans": 40.0,
+      "wiring": 60.0,
+      "switches": 15.0
+    },
+    {
+      "fans": 36.0,
+      "wiring": 54.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 32.0,
+      "wiring": 48.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 28.0,
+      "wiring": 42.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 24.0,
+      "wiring": 36.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 20.0,
+      "wiring": 30.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 16.0,
+      "wiring": 24.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 12.0,
+      "wiring": 18.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 8.0,
+      "wiring": 12.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 4.0,
+      "wiring": 6.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 0.0,
+      "wiring": 0.0,
+      "switches": 0.0
+    },
+    {
+      "fans": 0.0,
+      "wiring": 0.0,
+      "switches": 0.0
+    }
+  ],
+  "scenario": {
+    "type": "none",
+    "target": "",
+    "target_name": null,
+    "magnitude": 0,
+    "label": "legacy",
+    "switch_vendor": false,
+    "vendor_fails": false,
+    "early_discount_pct": 0.0,
+    "invoice_extension_days": 0,
+    "payable_extension_days": 0,
+    "demand_multiplier": 1.0
+  },
+  "summary": {
+    "stockout_day": 30,
+    "lost_sales_inr": 14800.0,
+    "lost_sales_all_products_inr": 40300.0,
+    "first_negative_day": null,
+    "lowest_cash_inr": 62550.0,
+    "lowest_cash_day": 1,
+    "end_cash_inr": 115200.0,
+    "failed_payments_count": 0,
+    "order_delay_days": null,
+    "customer_payment_day": 19
+  },
+  "cascade_chain": [
+    {
+      "step": "supplier_delay",
+      "status": "not_reached",
+      "day": null,
+      "title": "Supplier delay",
+      "detail": "No supplier delivery is late."
+    },
+    {
+      "step": "inventory_shortage",
+      "status": "triggered",
+      "day": 30,
+      "title": "Inventory shortage",
+      "detail": "Stock runs out on day 30; walk-in demand cannot be fully served."
+    },
+    {
+      "step": "delayed_orders",
+      "status": "avoided",
+      "day": null,
+      "title": "Delayed orders",
+      "detail": "Every order is delivered on its target day."
+    },
+    {
+      "step": "customer_payment_delay",
+      "status": "avoided",
+      "day": null,
+      "title": "Customer payment delay",
+      "detail": "Customer payment terms are met."
+    },
+    {
+      "step": "cash_gap",
+      "status": "avoided",
+      "day": null,
+      "title": "Cash-flow gap",
+      "detail": "Cash stays positive through the horizon."
+    },
+    {
+      "step": "failed_supplier_payment",
+      "status": "avoided",
+      "day": null,
+      "title": "Failed supplier payment",
+      "detail": "Every supplier payment is made."
+    }
+  ],
+  "events": [
+    {
+      "id": "ev001",
+      "day": 8,
+      "type": "restock_arrived",
+      "entity": "Supplier A",
+      "values": {
+        "units": 250.0
+      },
+      "cause_ids": [],
+      "severity": "info"
+    },
+    {
+      "id": "ev002",
+      "day": 12,
+      "type": "order_delivered",
+      "entity": "Verma Contractors",
+      "values": {
+        "order_id": "verma_order",
+        "target_day": 12.0
+      },
+      "cause_ids": [],
+      "severity": "info"
+    },
+    {
+      "id": "ev003",
+      "day": 19,
+      "type": "receivable_received",
+      "entity": "Verma Contractors",
+      "values": {
+        "amount_inr": 74000.0
+      },
+      "cause_ids": [],
+      "severity": "info"
+    },
+    {
+      "id": "ev004",
+      "day": 21,
+      "type": "stockout_started",
+      "entity": "Switches",
+      "values": {
+        "product_id": "switches",
+        "demand": 15.0,
+        "available": 0.0
+      },
+      "cause_ids": [],
+      "severity": "critical"
+    },
+    {
+      "id": "ev005",
+      "day": 23,
+      "type": "payable_paid",
+      "entity": "Supplier A invoice",
+      "values": {
+        "amount_inr": 275000.0
+      },
+      "cause_ids": [],
+      "severity": "info"
+    },
+    {
+      "id": "ev006",
+      "day": 25,
+      "type": "payable_paid",
+      "entity": "Supplier C invoice",
+      "values": {
+        "amount_inr": 70000.0
+      },
+      "cause_ids": [],
+      "severity": "info"
+    },
+    {
+      "id": "ev007",
+      "day": 30,
+      "type": "stockout_started",
+      "entity": "Fans",
+      "values": {
+        "product_id": "fans",
+        "demand": 4.0,
+        "available": 0.0
+      },
+      "cause_ids": [],
+      "severity": "critical"
+    },
+    {
+      "id": "ev008",
+      "day": 30,
+      "type": "stockout_started",
+      "entity": "Wiring coils",
+      "values": {
+        "product_id": "wiring",
+        "demand": 6.0,
+        "available": 0.0
+      },
+      "cause_ids": [],
+      "severity": "critical"
+    },
+    {
+      "id": "ev009",
+      "day": 30,
+      "type": "sales_lost",
+      "entity": "Switches",
+      "values": {
+        "product_id": "switches",
+        "days": 10.0,
+        "units": 150.0,
+        "value_inr": 25500.0
+      },
+      "cause_ids": [
+        "ev004"
+      ],
+      "severity": "critical"
+    },
+    {
+      "id": "ev010",
+      "day": 30,
+      "type": "sales_lost",
+      "entity": "Fans",
+      "values": {
+        "product_id": "fans",
+        "days": 1.0,
+        "units": 4.0,
+        "value_inr": 7600.0
+      },
+      "cause_ids": [
+        "ev007"
+      ],
+      "severity": "critical"
+    },
+    {
+      "id": "ev011",
+      "day": 30,
+      "type": "sales_lost",
+      "entity": "Wiring coils",
+      "values": {
+        "product_id": "wiring",
+        "days": 1.0,
+        "units": 6.0,
+        "value_inr": 7200.0
+      },
+      "cause_ids": [
+        "ev008"
+      ],
+      "severity": "critical"
+    }
+  ],
+  "timeline": {
+    "cash": [
+      62550.0,
+      75100.0,
+      87650.0,
+      100200.0,
+      112750.0,
+      125300.0,
+      137850.0,
+      150400.0,
+      162950.0,
+      175500.0,
+      188050.0,
+      200600.0,
+      213150.0,
+      225700.0,
+      238250.0,
+      250800.0,
+      263350.0,
+      275900.0,
+      362450.0,
+      375000.0,
+      385000.0,
+      395000.0,
+      130000.0,
+      140000.0,
+      80000.0,
+      90000.0,
+      100000.0,
+      110000.0,
+      120000.0,
+      115200.0
+    ],
+    "stock": [
+      {
+        "fans": 32.0,
+        "wiring": 48.0,
+        "switches": 285.0
+      },
+      {
+        "fans": 28.0,
+        "wiring": 42.0,
+        "switches": 270.0
+      },
+      {
+        "fans": 24.0,
+        "wiring": 36.0,
+        "switches": 255.0
+      },
+      {
+        "fans": 20.0,
+        "wiring": 30.0,
+        "switches": 240.0
+      },
+      {
+        "fans": 16.0,
+        "wiring": 24.0,
+        "switches": 225.0
+      },
+      {
+        "fans": 12.0,
+        "wiring": 18.0,
+        "switches": 210.0
+      },
+      {
+        "fans": 8.0,
+        "wiring": 12.0,
+        "switches": 195.0
+      },
+      {
+        "fans": 104.0,
+        "wiring": 156.0,
+        "switches": 180.0
+      },
+      {
+        "fans": 100.0,
+        "wiring": 150.0,
+        "switches": 165.0
+      },
+      {
+        "fans": 96.0,
+        "wiring": 144.0,
+        "switches": 150.0
+      },
+      {
+        "fans": 92.0,
+        "wiring": 138.0,
+        "switches": 135.0
+      },
+      {
+        "fans": 68.0,
+        "wiring": 102.0,
+        "switches": 120.0
+      },
+      {
+        "fans": 64.0,
+        "wiring": 96.0,
+        "switches": 105.0
+      },
+      {
+        "fans": 60.0,
+        "wiring": 90.0,
+        "switches": 90.0
+      },
+      {
+        "fans": 56.0,
+        "wiring": 84.0,
+        "switches": 75.0
+      },
+      {
+        "fans": 52.0,
+        "wiring": 78.0,
+        "switches": 60.0
+      },
+      {
+        "fans": 48.0,
+        "wiring": 72.0,
+        "switches": 45.0
+      },
+      {
+        "fans": 44.0,
+        "wiring": 66.0,
+        "switches": 30.0
+      },
+      {
+        "fans": 40.0,
+        "wiring": 60.0,
+        "switches": 15.0
+      },
+      {
+        "fans": 36.0,
+        "wiring": 54.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 32.0,
+        "wiring": 48.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 28.0,
+        "wiring": 42.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 24.0,
+        "wiring": 36.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 20.0,
+        "wiring": 30.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 16.0,
+        "wiring": 24.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 12.0,
+        "wiring": 18.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 8.0,
+        "wiring": 12.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 4.0,
+        "wiring": 6.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 0.0,
+        "wiring": 0.0,
+        "switches": 0.0
+      },
+      {
+        "fans": 0.0,
+        "wiring": 0.0,
+        "switches": 0.0
+      }
+    ]
+  },
+  "explanations": [
+    {
+      "metric_id": "stockout_day",
+      "label": "First stock-out day",
+      "value": 30,
+      "unit": "day",
+      "sentence": "Fans and Wiring coils run out on day 30.",
+      "event_ids": [
+        "ev007",
+        "ev008"
+      ]
+    },
+    {
+      "metric_id": "lost_sales_inr",
+      "label": "Lost walk-in sales",
+      "value": 14800.0,
+      "unit": "inr",
+      "sentence": "Walk-in sales of fans and wiring coils stop for 1 days, which loses about \u20b914,800 in sales.",
+      "event_ids": [
+        "ev010",
+        "ev011"
+      ]
+    },
+    {
+      "metric_id": "lost_sales_all_products_inr",
+      "label": "Lost walk-in sales (all products)",
+      "value": 40300.0,
+      "unit": "inr",
+      "sentence": "All products together lose about \u20b940,300 of walk-in sales.",
+      "event_ids": [
+        "ev009",
+        "ev010",
+        "ev011"
+      ]
+    },
+    {
+      "metric_id": "first_negative_day",
+      "label": "First day cash is below zero",
+      "value": null,
+      "unit": "day",
+      "sentence": "Cash never falls below zero within the 30-day horizon.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "lowest_cash_inr",
+      "label": "Lowest cash",
+      "value": 62550.0,
+      "unit": "inr",
+      "sentence": "The lowest cash is \u20b962,550 on day 1.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "lowest_cash_day",
+      "label": "Day of lowest cash",
+      "value": 1,
+      "unit": "day",
+      "sentence": "The lowest cash lands on day 1.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "end_cash_inr",
+      "label": "Cash at the end of the horizon",
+      "value": 115200.0,
+      "unit": "inr",
+      "sentence": "Cash ends the 30-day horizon at \u20b91,15,200.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "failed_payments_count",
+      "label": "Failed supplier payments",
+      "value": 0,
+      "unit": "count",
+      "sentence": "0 supplier payments fail; every amount due is paid on time.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "order_delay_days",
+      "label": "Order delay",
+      "value": null,
+      "unit": "day",
+      "sentence": "Every customer order is delivered on its target day.",
+      "event_ids": []
+    },
+    {
+      "metric_id": "customer_payment_day",
+      "label": "Customer payment day",
+      "value": 19,
+      "unit": "day",
+      "sentence": "The customer pays on day 19.",
+      "event_ids": []
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "supplier_invoice_date_fixed",
+      "text": "The supplier invoice date does not move when delivery is late, so the Supplier A invoice stays due on day 23.",
+      "value": 23.0,
+      "unit": "day",
+      "editable": false,
+      "source": "demo_data"
+    },
+    {
+      "id": "demand_flat",
+      "text": "Walk-in demand stays at the recent daily average for the whole horizon.",
+      "value": 1.0,
+      "unit": "multiplier",
+      "editable": true,
+      "source": "demo_data"
+    },
+    {
+      "id": "customer_payment_terms",
+      "text": "Verma Contractors pays 7 days after delivery.",
+      "value": 7.0,
+      "unit": "day",
+      "editable": true,
+      "source": "demo_data"
+    },
+    {
+      "id": "order_delivery_rule",
+      "text": "Verma Contractors's order is delivered on the first day stock allows on or after day 12.",
+      "value": 12.0,
+      "unit": "day",
+      "editable": false,
+      "source": "assumed"
+    },
+    {
+      "id": "lost_sales_scope",
+      "text": "Lost walk-in sales are reported for the disrupted supplier's products; the other products are shown separately in the timeline.",
+      "value": null,
+      "unit": null,
+      "editable": false,
+      "source": "assumed"
+    },
+    {
+      "id": "horizon",
+      "text": "The simulation covers 30 days.",
+      "value": 30.0,
+      "unit": "day",
+      "editable": true,
+      "source": "user"
+    }
+  ],
+  "ranges": {
+    "runs": [
+      {
+        "case": "low",
+        "demand_multiplier": 0.8,
+        "metrics": {
+          "stockout_day": null,
+          "lost_sales_inr": 0.0,
+          "first_negative_day": null,
+          "lowest_cash_inr": 6000.0,
+          "lowest_cash_day": 25,
+          "end_cash_inr": 41200.0
+        }
+      },
+      {
+        "case": "base",
+        "demand_multiplier": 1.0,
+        "metrics": {
+          "stockout_day": 30,
+          "lost_sales_inr": 14800.0,
+          "first_negative_day": null,
+          "lowest_cash_inr": 62550.0,
+          "lowest_cash_day": 1,
+          "end_cash_inr": 115200.0
+        }
+      },
+      {
+        "case": "high",
+        "demand_multiplier": 1.2,
+        "metrics": {
+          "stockout_day": 25,
+          "lost_sales_inr": 103600.0,
+          "first_negative_day": null,
+          "lowest_cash_inr": 66020.0,
+          "lowest_cash_day": 1,
+          "end_cash_inr": 115200.0
+        }
+      }
+    ],
+    "metrics": {
+      "stockout_day": {
+        "min": 25,
+        "base": 30,
+        "max": null,
+        "min_case": "high",
+        "max_case": "low"
+      },
+      "lost_sales_inr": {
+        "min": 0.0,
+        "base": 14800.0,
+        "max": 103600.0,
+        "min_case": "low",
+        "max_case": "high"
+      },
+      "first_negative_day": {
+        "min": null,
+        "base": null,
+        "max": null,
+        "min_case": "low",
+        "max_case": "low"
+      },
+      "lowest_cash_inr": {
+        "min": 6000.0,
+        "base": 62550.0,
+        "max": 66020.0,
+        "min_case": "low",
+        "max_case": "high"
+      },
+      "lowest_cash_day": {
+        "min": 1,
+        "base": 1,
+        "max": 25,
+        "min_case": "base",
+        "max_case": "low"
+      },
+      "end_cash_inr": {
+        "min": 41200.0,
+        "base": 115200.0,
+        "max": 115200.0,
+        "min_case": "low",
+        "max_case": "base"
+      }
+    },
+    "range_note": "Across demand 20 percent lower to 20 percent higher, cash stays positive throughout."
+  },
+  "meta": {
+    "engine_version": "1.0.0",
+    "horizon_days": 30,
+    "deterministic": true,
+    "shock_type": "none"
+  }
+}
