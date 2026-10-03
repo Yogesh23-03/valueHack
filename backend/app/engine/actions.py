@@ -29,12 +29,15 @@ class VendorRisk(TypedDict):
 
 
 def get_vendor_risk(vendor_identifier: str) -> VendorRisk:
-    """Stub: returns band 'unknown'.
+    """Evaluate vendor risk using the signals.vendor trust engine."""
+    from app.signals.vendor import check_vendor
 
-    Person 4 replaces the body by calling ``signals.vendor``. The signature is
-    frozen for the API contract (see ``docs/api_contract_engine.md``).
-    """
-    return {"score": -1, "band": "unknown", "reasons": ["Vendor check not connected"]}
+    res = check_vendor(vendor_identifier)
+    return {
+        "score": int(res.get("score", 50)),
+        "band": res.get("badge", "unknown"),
+        "reasons": res.get("reasons", []),
+    }
 
 
 # ---------------------------------------------------------------------------
