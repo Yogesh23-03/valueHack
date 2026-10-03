@@ -26,3 +26,5 @@ out/
 # Freebuff / editor
 .freebuff/
 .DS_Store
+/docs/
+/.freebuff/
