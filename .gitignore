@@ -1,0 +1,30 @@
+# Local logs written while running the app
+.uvicorn.log
+.next-dev.log
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# SQLite demo database (currently tracked; kept here for new checkouts)
+backend/bizsim.db
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# Local env files (templates are committed)
+.env
+.env.local
+.env*.local
+
+# Freebuff / editor
+.freebuff/
+.DS_Store
+/docs/
+/.freebuff/

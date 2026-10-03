@@ -1,0 +1,4 @@
+id,name,scenario_type,target,magnitude,duration_days
+1,Supplier A 14-day delay,supplier_delay,Supplier A,14,30
+2,Supplier C cost spike,cost_spike,Supplier C,15,30
+3,Verma customer delay,customer_delay,Verma Contractors,7,30

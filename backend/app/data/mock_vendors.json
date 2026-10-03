@@ -1,0 +1,245 @@
+[
+  {
+    "id": "supplier_a",
+    "name": "Supplier A",
+    "aliases": ["Supplier A", "Apex Electricals Pvt Ltd", "Apex Electricals"],
+    "gstin": "27AAPFU0939F1ZV",
+    "pan": "AAPFU0939F",
+    "age_years": 6.5,
+    "registration_date": "2018-04-12",
+    "state": "Maharashtra",
+    "address": "Plot 42, MIDC Industrial Area, Pune 411018",
+    "address_changes_last_2yr": 0,
+    "director_changes_last_2yr": 0,
+    "filing_history": {
+      "gstr1_compliance_pct": 100,
+      "gstr3b_compliance_pct": 100,
+      "missing_filings_count": 0,
+      "delayed_filings_count": 0
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "supplier_c",
+    "name": "Supplier C",
+    "aliases": ["Supplier C", "Classic Switchgears & Fittings", "Classic Switchgears"],
+    "gstin": "29AABCS1429B1ZQ",
+    "pan": "AABCS1429B",
+    "age_years": 4.2,
+    "registration_date": "2020-07-20",
+    "state": "Karnataka",
+    "address": "12/A, Peenya Industrial Estate, Bengaluru 560058",
+    "address_changes_last_2yr": 0,
+    "director_changes_last_2yr": 1,
+    "filing_history": {
+      "gstr1_compliance_pct": 98,
+      "gstr3b_compliance_pct": 98,
+      "missing_filings_count": 0,
+      "delayed_filings_count": 1
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "new_distributor",
+    "name": "New Distributor",
+    "aliases": ["New Distributor", "QuickElectro Wholesale Ltd", "QuickElectro"],
+    "gstin": "07AAECQ1234F1ZS",
+    "pan": "AAECQ1234F",
+    "age_years": 0.3,
+    "registration_date": "2024-06-15",
+    "state": "Delhi",
+    "address": "Room 4B, 3rd Floor, Residential Tower B, Dwarka, New Delhi 110075",
+    "address_changes_last_2yr": 2,
+    "director_changes_last_2yr": 3,
+    "filing_history": {
+      "gstr1_compliance_pct": 40,
+      "gstr3b_compliance_pct": 30,
+      "missing_filings_count": 4,
+      "delayed_filings_count": 2
+    },
+    "court_cases": [
+      {"court": "Negotiable Instruments Act (NI 138) Magistrate Court Delhi", "case_no": "CC/4921/2024", "nature": "Cheque bounce for Rs 12.5L", "status": "Pending summons"},
+      {"court": "Commercial Court Patiala House", "case_no": "CS/1102/2024", "nature": "Recovery suit by former component supplier", "status": "Notice issued"}
+    ],
+    "insolvency_proceedings": false,
+    "adverse_media": [
+      {"source": "Trade Grievance Forum", "headline": "Multiple buyers report unfulfilled advance deliveries from QuickElectro", "date": "2024-08-10"}
+    ],
+    "is_mock": true
+  },
+  {
+    "id": "shree_balaji",
+    "name": "Shree Balaji Components",
+    "aliases": ["Shree Balaji Components", "Balaji Components"],
+    "gstin": "24AABCS5555M1Z2",
+    "pan": "AABCS5555M",
+    "age_years": 2.1,
+    "registration_date": "2022-09-01",
+    "state": "Gujarat",
+    "address": "GIDC Estate, Phase II, Vatva, Ahmedabad 382445",
+    "address_changes_last_2yr": 1,
+    "director_changes_last_2yr": 0,
+    "filing_history": {
+      "gstr1_compliance_pct": 85,
+      "gstr3b_compliance_pct": 80,
+      "missing_filings_count": 1,
+      "delayed_filings_count": 3
+    },
+    "court_cases": [
+      {"court": "Civil Court Ahmedabad", "case_no": "OS/884/2023", "nature": "Commercial billing dispute under Rs 2L", "status": "Mediation in progress"}
+    ],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "vanguard_industrial",
+    "name": "Vanguard Industrial Supplies",
+    "aliases": ["Vanguard Industrial Supplies", "Vanguard Industrial"],
+    "gstin": "33AABCV8888K1ZM",
+    "pan": "AABCV8888K",
+    "age_years": 8.0,
+    "registration_date": "2016-02-14",
+    "state": "Tamil Nadu",
+    "address": "Ambattur Industrial Estate, Chennai 600058",
+    "address_changes_last_2yr": 0,
+    "director_changes_last_2yr": 0,
+    "filing_history": {
+      "gstr1_compliance_pct": 100,
+      "gstr3b_compliance_pct": 100,
+      "missing_filings_count": 0,
+      "delayed_filings_count": 0
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "delta_phoenix",
+    "name": "Delta Phoenix Traders",
+    "aliases": ["Delta Phoenix Traders", "Delta Phoenix"],
+    "gstin": "06AABCD9999L1ZT",
+    "pan": "AABCD9999L",
+    "age_years": 0.2,
+    "registration_date": "2024-08-01",
+    "state": "Haryana",
+    "address": "H.No 104, Village Wazirabad, Gurugram 122003",
+    "address_changes_last_2yr": 1,
+    "director_changes_last_2yr": 2,
+    "filing_history": {
+      "gstr1_compliance_pct": 20,
+      "gstr3b_compliance_pct": 0,
+      "missing_filings_count": 3,
+      "delayed_filings_count": 1
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [
+      {"source": "Consumer Complaints Bureau", "headline": "Phantom supplier warning: advance taken with no warehouse existance", "date": "2024-09-05"}
+    ],
+    "is_mock": true
+  },
+  {
+    "id": "metro_wires",
+    "name": "Metro Wires & Cables",
+    "aliases": ["Metro Wires & Cables", "Metro Wires"],
+    "gstin": "27AABCM7777H1Z1",
+    "pan": "AABCM7777H",
+    "age_years": 3.4,
+    "registration_date": "2021-05-18",
+    "state": "Maharashtra",
+    "address": "Bhiwandi Warehousing Hub, Thane 421302",
+    "address_changes_last_2yr": 2,
+    "director_changes_last_2yr": 1,
+    "filing_history": {
+      "gstr1_compliance_pct": 90,
+      "gstr3b_compliance_pct": 85,
+      "missing_filings_count": 1,
+      "delayed_filings_count": 2
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "reliable_power",
+    "name": "Reliable Power Solutions",
+    "aliases": ["Reliable Power Solutions", "Reliable Power"],
+    "gstin": "29AABCR4444D1ZI",
+    "pan": "AABCR4444D",
+    "age_years": 5.1,
+    "registration_date": "2019-11-10",
+    "state": "Karnataka",
+    "address": "Bommasandra Industrial Area, Hosur Road, Bengaluru 560099",
+    "address_changes_last_2yr": 0,
+    "director_changes_last_2yr": 0,
+    "filing_history": {
+      "gstr1_compliance_pct": 96,
+      "gstr3b_compliance_pct": 95,
+      "missing_filings_count": 0,
+      "delayed_filings_count": 2
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "fasttrack_hardware",
+    "name": "FastTrack Hardware Hub",
+    "aliases": ["FastTrack Hardware Hub", "FastTrack Hardware"],
+    "gstin": "19AABCF3333E1ZZ",
+    "pan": "AABCF3333E",
+    "age_years": 1.5,
+    "registration_date": "2023-03-25",
+    "state": "West Bengal",
+    "address": "Strand Road, Burrabazar, Kolkata 700001",
+    "address_changes_last_2yr": 1,
+    "director_changes_last_2yr": 1,
+    "filing_history": {
+      "gstr1_compliance_pct": 75,
+      "gstr3b_compliance_pct": 70,
+      "missing_filings_count": 2,
+      "delayed_filings_count": 4
+    },
+    "court_cases": [],
+    "insolvency_proceedings": false,
+    "adverse_media": [],
+    "is_mock": true
+  },
+  {
+    "id": "zenith_circuit",
+    "name": "Zenith Circuit Importers",
+    "aliases": ["Zenith Circuit Importers", "Zenith Circuits"],
+    "gstin": "36AABCZ2222C1ZT",
+    "pan": "AABCZ2222C",
+    "age_years": 4.8,
+    "registration_date": "2020-01-10",
+    "state": "Telangana",
+    "address": "Cherlapally Industrial Estate, Hyderabad 500051",
+    "address_changes_last_2yr": 0,
+    "director_changes_last_2yr": 2,
+    "filing_history": {
+      "gstr1_compliance_pct": 50,
+      "gstr3b_compliance_pct": 40,
+      "missing_filings_count": 5,
+      "delayed_filings_count": 3
+    },
+    "court_cases": [
+      {"court": "NCLT Hyderabad Bench", "case_no": "CP(IB)/241/2024", "nature": "Operational Creditor IBC Section 9 petition admitted", "status": "Resolution professional appointed"}
+    ],
+    "insolvency_proceedings": true,
+    "adverse_media": [
+      {"source": "Financial Chronicle", "headline": "NCLT initiates CIRP against Zenith Circuit Importers over default", "date": "2024-07-22"}
+    ],
+    "is_mock": true
+  }
+]

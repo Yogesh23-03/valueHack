@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pydantic
+sqlmodel
+pandas
+numpy
+networkx
+scikit-learn
+statsmodels
+google-generativeai
+pdf2image
+Pillow
+reportlab
+python-multipart

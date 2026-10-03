@@ -1,0 +1,4 @@
+id,name,gstin,pan,score,risk_level
+1,Supplier A,27AAPFU0939F1ZV,AAPFU0939F,88,low
+2,Supplier C,29AABCU9603R1ZM,AABCU9603R,75,medium
+3,New Distributor,27AAAPL1234C1ZV,AAAPL1234C,32,high

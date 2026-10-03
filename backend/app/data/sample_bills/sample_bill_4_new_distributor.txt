@@ -1,0 +1,18 @@
+"""PROFORMA ADVANCE INVOICE - QUICKELECTRO WHOLESALE LTD
+Room 4B, 3rd Floor, Residential Tower B, Dwarka, New Delhi 110075
+GSTIN: 07AAECQ1234F1Z5
+
+Invoice No: QD-ADV-0089
+Date: 03-Oct-2026
+Due Date: 06-Oct-2026
+
+Billed To:
+Sharma Hardware and Electricals
+
+Items:
+1. Ceiling Fans 1200mm (Discounted Lot) | HSN: 8414 | Qty: 100 | Rate: Rs 1,190.00 (15% below market) | GST: 18% | Amount: Rs 1,19,000.00
+2. Copper Wiring Coils 90m              | HSN: 8544 | Qty: 150 | Rate: Rs 765.00  (15% below market) | GST: 18% | Amount: Rs 1,14,750.00
+
+Total Order Value: Rs 2,33,750.00
+Required 50% Advance Due Day 3: Rs 1,16,875.00
+"""

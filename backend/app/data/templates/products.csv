@@ -1,0 +1,4 @@
+id,name,price,cost,demand_per_day,opening_stock,supplier_name
+1,fans,1900,1400,4,36,Supplier A
+2,wiring,1200,900,6,54,Supplier A
+3,switches,170,95,15,300,Supplier C
