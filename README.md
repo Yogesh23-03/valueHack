@@ -379,7 +379,10 @@ valuehack/
     ├── frontend_gap_list.md      What the backend returned vs what the UI showed
     ├── samples/                  Real, trimmed API responses + a capture script
     ├── screenshots/              demo-walkthrough.webm (see §3)
-    └── BizSim_Engineering_Report.md   Full engineering report (and .pdf)
+    ├── BizSim_Engineering_Report.md    Full engineering report
+    ├── BizSim_Engineering_Report.pdf   The same report as a PDF (11 pages)
+    └── md_to_pdf.py             Small ReportLab converter that builds that PDF
+                              (pandoc is present but the LaTeX engine is missing packages)
 ```
 
 ---
